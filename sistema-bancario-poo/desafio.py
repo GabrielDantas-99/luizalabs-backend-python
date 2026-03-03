@@ -1,5 +1,6 @@
-from abc import ABC, abstractclassmethod, abstractproperty
+from abc import ABC
 from datetime import datetime
+import textwrap
 
 
 class PessoaFisica:
@@ -167,3 +168,144 @@ class Deposito(Transacao):
     
     if sucesso_transacao:
       conta.historico.adicionar_transacao(self)
+      
+def menu():
+  menu = """\n
+    ========== Menu ==========
+    [d]\t Depositar
+    [s]\t Sacar
+    [e]\t Extrato
+    [nc]\t Nova Conta
+    [lc]\t Listar Contas
+    [nu]\t Novo Usuário
+    [q]\t Sair
+    => """
+  return input(textwrap.dedent(menu))
+
+def filtrar_cliente(cpf, clientes: list[Cliente]) -> Cliente | None:
+  clientes_filtrados = [cliente for cliente in clientes if cliente.cpf == cpf]
+  return clientes_filtrados[0] if clientes_filtrados else print("\n Cliente não encontrado!")
+
+def recuperar_conta_cliente(cliente: Cliente) -> Conta:
+  if not cliente.contas:
+    print("\n CLiente não possui conta!")
+  return cliente.contas[0]
+
+CPF_INPUT = "Informe o CPF do cliente: "
+
+def depositar(clientes: list[Cliente]):
+  cpf = input(CPF_INPUT)
+  cliente = filtrar_cliente(cpf, clientes)
+  
+  if not cliente: 
+    return
+  
+  valor = float(input("Informe o valor do depósito: "))
+  transacao = Deposito(valor)
+  
+  conta = recuperar_conta_cliente(cliente)
+  
+  if not conta:
+    return
+  
+  cliente.realizar_transacao(conta, transacao)
+  
+def sacar(clientes):
+  cpf = input(CPF_INPUT)
+  cliente = filtrar_cliente(cpf, clientes)
+  
+  if not cliente:
+    return
+  
+  valor = float(input("Informe o valor do saque: "))
+  transacao = Saque(valor)
+  
+  conta  = recuperar_conta_cliente(cliente)
+  
+  if not conta:
+    return
+  
+  cliente.realizar_transacao(conta, transacao)
+  
+def exibir_extrato(clientes):
+  cpf = input(CPF_INPUT)
+  cliente = filtrar_cliente(cpf, clientes)
+  
+  if not cliente:
+    return
+  
+  conta = recuperar_conta_cliente(cliente)
+  
+  if not conta:
+    return
+  
+  print("\n========== EXTRATO ==========")
+  
+def criar_cliente(clientes):
+  cpf = input(CPF_INPUT)
+  cliente = filtrar_cliente(cpf, clientes)
+  
+  if cliente:
+    print("\nJá existe um cliente com esse CPF!")
+    return
+  
+  nome = input("Nome completo: ")
+  data_nascimento = input("Data de nascimento (dd-mm-aaaa): ")
+  endereco = input("Endereço (logradouro, bairro, cidade/sigla estado): ")
+  
+  cliente = Cliente(nome=nome, cpf=cpf, data_nascimento=data_nascimento, endereco=endereco)
+  
+  clientes.append(cliente)
+  
+  print("\nCliente cadastrado com sucesso!")
+  
+def criar_conta(numero_conta, clientes, contas):
+  cpf = input(CPF_INPUT)
+  cliente = filtrar_cliente(cpf, clientes)
+  
+  if not cliente:
+    return
+  
+  conta = ContaCorrente.nova_conta(cliente=cliente, numero=numero_conta)
+  contas.append(conta)
+  cliente.contas.append(conta)
+  
+  print("\n Conta criada com sucesso!")
+  
+def listar_contas(contas):
+  for conta in contas:
+    print("=" * 50)
+    print(textwrap.dedent(str(conta)))
+    
+def main():
+  clientes = []
+  contas = []
+  _next_id = 0
+  
+  while True:
+    opcao = menu()
+    
+    if opcao == "d":
+      depositar(clientes)
+    
+    elif opcao == "s":
+      sacar(clientes)
+    
+    elif opcao == "e":
+      exibir_extrato(clientes)
+    
+    elif opcao == "nu":
+      criar_cliente(clientes)
+    
+    elif opcao == "nc":
+      criar_conta(_next_id, clientes, contas)
+      _next_id += 1
+    
+    elif opcao == "lc":
+      listar_contas(clientes)
+    
+    elif opcao == "q":
+      break
+    
+    else:
+      print("\nOpção inválida!")
