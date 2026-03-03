@@ -13,9 +13,6 @@ metadata = sa.MetaData()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-  from models.post import post # noqa
-  
-  await database.connect()
   metadata.create_all(engine)
   yield
   await database.disconnect()
