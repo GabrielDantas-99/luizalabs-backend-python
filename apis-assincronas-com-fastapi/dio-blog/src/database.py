@@ -1,7 +1,7 @@
 import databases
 import sqlalchemy as sa
 
-from config import settings
+from .config import settings
 
 database = databases.Database(settings.database_url)
 metadata = sa.MetaData()
