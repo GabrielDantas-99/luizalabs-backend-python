@@ -10,7 +10,8 @@ dependencies = [
     "fastapi",
     "uvicorn[standard] (>=0.41.0,<0.42.0)",
     "databases[aiosqlite] (>=0.9.0,<0.10.0)",
-    "pydantic-settings"
+    "pydantic-settings",
+    "pyjwt"
 ]
 
 
