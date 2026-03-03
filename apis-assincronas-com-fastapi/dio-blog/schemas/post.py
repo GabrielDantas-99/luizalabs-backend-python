@@ -1,9 +1,14 @@
-from datetime import UTC, datetime
-
-from pydantic import BaseModel
+from pydantic import AwareDatetime, BaseModel
 
 
 class PostIn(BaseModel):
   title: str
-  date: datetime = datetime.now(UTC)
+  content: str
+  published_at: AwareDatetime | None = None
   published: bool = False
+    
+class PostUpdateIn(BaseModel):
+  title: str | None = None
+  content: str | None = None
+  published_at: AwareDatetime | None = None
+  published: bool | None = None
