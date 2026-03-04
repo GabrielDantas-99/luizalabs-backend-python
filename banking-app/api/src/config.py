@@ -13,7 +13,7 @@ class Settings(BaseSettings):
   database_url: str
   
   jwt_secret: str
-  jwt_algoritm: str = "HS256"
+  jwt_algorithm: str = "HS256"
   jwt_expire_minutes: int = 30
   
   allowed_origins: str = "*"
