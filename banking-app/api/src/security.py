@@ -1,12 +1,13 @@
-from http.client import HTTPException
+import time
 from typing import Annotated
 from uuid import uuid4
 
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from fastapi import Depends, status
-from src.config import settings
 import jwt
-import time
+from fastapi import Depends, HTTPException, Request, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+
+from src.config import settings
+from src.views.auth import LoginOut
 
 from src.views.auth import LoginOut
 

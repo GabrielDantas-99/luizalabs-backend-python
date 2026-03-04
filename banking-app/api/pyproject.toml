@@ -12,7 +12,11 @@ dependencies = [
     "pydantic",
     "pydantic-settings",
     "databases",
-    "pyjwt"
+    "pyjwt",
+    "sqlalchemy",
+    "alembic",
+    "psycopg2[binary]",
+    "aiosqlite"
 ]
 
 
