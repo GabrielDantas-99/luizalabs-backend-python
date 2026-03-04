@@ -1,8 +1,16 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr, Field
 
 class LoginIn(BaseModel):
   """Credenciais necessárias para obter um token de acesso JWT."""
   
-  user_id: int = Field(..., gt=0, description="ID do usuário a ser autenticado.")
-  
-  model_config = {"json_schema_extra": {"example": {"user_id": 1}}}
+  email: EmailStr = Field(..., description="Endereço de e-mail utilizado durante o cadastro.")
+  password: str = Field(..., min_length=8, description="Senha da conta.")
+
+  model_config = {
+    "json_schema_extra": {
+      "example": {
+        "email": "ada@example.com",
+        "password": "s3cr3tpass",
+      }
+    }
+  }

@@ -10,7 +10,10 @@ from src.controllers import account, auth, transaction
 from src.database import database, engine, metadata
 from src.exceptions import AccountNotFoundError, BusinessError
 
-# ── Ciclo de vida (Lifespan) ───────────────────────────────────────────────────
+# Import all models so their tables are registered in metadata before create_all.
+import src.models  # noqa: F401
+
+# ── Lifespan ───────────────────────────────────────────────────────────────────
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
@@ -50,10 +53,11 @@ app = FastAPI(
   Uma API bancária RESTful assíncrona construída com **FastAPI**.
 
   ### Fluxo
-  1. **Autentique-se** via `POST /auth/login` para receber um token Bearer.
-  2. **Crie uma conta** via `POST /accounts/`.
-  3. **Deposite ou saque** via `POST /transactions/`.
-  4. **Visualize o extrato** via `GET /accounts/{account_id}/transactions`.
+  1. **Registre-se** via `POST /auth/register` para criar sua conta de usuário.
+  2. **Autentique-se** via `POST /auth/login` para receber um token Bearer.
+  3. **Crie uma conta** via `POST /accounts/`.
+  4. **Deposite ou saque** via `POST /transactions/`.
+  5. **Visualize o extrato** via `GET /accounts/{account_id}/transactions`.
 
   ### Autenticação
   Todos os endpoints `/accounts` e `/transactions` exigem:
